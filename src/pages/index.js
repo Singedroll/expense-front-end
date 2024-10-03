@@ -8,6 +8,7 @@ import { FaAngleRight } from "react-icons/fa6";
 import RentIcon from "../../public/icons/RentIcon";
 import FoodExpense from "../../public/icons/FoodExpenseIcon";
 import AddRecord from "@/components/AddRecord";
+import { Categories } from "@/components/Categories";
 
 const categories = [
   "Food & Drinks",
@@ -117,20 +118,7 @@ const records = [
     },
   ],
 ];
-let checked = [
-  "true",
-  "true",
-  "true",
-  "true",
-  "true",
-  "true",
-  "true",
-  "true",
-  "true",
-  "true",
-  "true",
-  "true",
-];
+
 const Home = () => {
   const [showAdd, setShowAdd] = useState(false);
 
@@ -138,7 +126,7 @@ const Home = () => {
   const [myRecords, setRecords] = useState(records);
 
   const [selectedCategories, setSelectedCategories] = useState(categories);
-  const [selectedEyes, setSelectedEyes] = useState(checked);
+  const [selectedEyes, setSelectedEyes] = useState();
 
   const [checkedCategories, setCheckedCategories] = useState(categories);
   const handleCategory = (input, index) => {
@@ -180,9 +168,7 @@ const Home = () => {
   const handleAdd = () => {
     setShowAdd(!showAdd);
   };
-  // const opacity = showAdd === false ? "opacity-100" : "opacity-100";
   return (
-    // <div className="flex justify-center items-center flex-col">
     <div>
       {showAdd && (
         <div className="z-30 fixed top-0 left-0 right-0 bottom-0 bg-gray-400 flex justify-center items-center">
@@ -248,16 +234,7 @@ const Home = () => {
                 <p className="font-normal text-base opacity-20"> Clear </p>
               </div>
               <div className="flex flex-col gap-2">
-                {categories.map((category1, index) => {
-                  return (
-                    <div
-                      key={index}
-                      onClick={() => handleCategory(selectedEyes[index], index)}
-                    >
-                      <MyCategories categoryName={category1} />
-                    </div>
-                  );
-                })}
+                <Categories />
               </div>
               <div className="flex gap-2 py-1.5 pl-3 items-center">
                 <PlusSign color={"#0166FF"} />

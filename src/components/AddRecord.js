@@ -1,5 +1,5 @@
 import { IoClose } from "react-icons/io5";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Drink from "../../public/icons/Drink";
 import Gift from "../../public/icons/Gift";
 import Shopping from "../../public/icons/Shopping";
@@ -32,12 +32,12 @@ const AddRecord = (props) => {
   const textColorExpense =
     incomeExpense === "Expense" ? "text-white" : "text-base";
 
-  const today = new Date();
-  const day = String(today.getDate());
-  const year = String(today.getFullYear());
-  const month = "0" + String(today.getMonth());
-  const hour = String(today.getHours());
-  const minutes = String(today.getMinutes());
+  // const today = new Date();
+  // const day = String(today.getDate());
+  // const year = String(today.getFullYear());
+  // const month = "0" + String(today.getMonth());
+  // const hour = String(today.getHours());
+  // const minutes = String(today.getMinutes());
   return (
     <div className="w-[792px] flex flex-col rounded-xl  border-b border-[#E2E8F0] bg-slate-200">
       <div className="py-5 px-6 flex justify-between">
@@ -78,24 +78,6 @@ const AddRecord = (props) => {
                 <option className="px-[18px] py-2 flex gap-3">Food</option>
                 <option> Home </option>
               </select>
-            </div>
-            <div className="flex gap-2">
-              <div className="flex flex-col gap-2 w-full">
-                <p>Date</p>
-                <input
-                  type="date"
-                  defaultValue={`${year}-${month}-${day}`}
-                  className="py-3 px-4 bg-[#F9FAFB] border border-[#D1D5DB] rounded-lg"
-                />
-              </div>
-              <div className="flex flex-col gap-2 w-full">
-                <p>Time</p>
-                <input
-                  type="time"
-                  defaultValue={`${hour}:${minutes}`}
-                  className="py-3 px-4 bg-[#F9FAFB] border border-[#D1D5DB] rounded-lg"
-                />
-              </div>
             </div>
           </div>
           <button

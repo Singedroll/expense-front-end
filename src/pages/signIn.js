@@ -1,5 +1,18 @@
 import Logo from "../../public/icons/Logo";
 import Link from "next/link";
+import axios from "axios";
+async function getUser() {
+  try {
+    const response = await axios.get("http://localhost:5050/user");
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const createId = () => {
+  localStorage.setItem();
+};
 
 const SignIn = () => {
   return (
@@ -28,7 +41,7 @@ const SignIn = () => {
               placeholder="Password"
             />
             <button
-              onClick={() => Login()}
+              onClick={() => getUser()}
               className="bg-[#0166FF] justify-center font-normal text-xl flex items-center text-white text-center py-2.5 w-full rounded-3xl"
             >
               Log in
@@ -38,7 +51,7 @@ const SignIn = () => {
             <p className="text-[#0F172A] font-normal text-base">
               Do not have account?
             </p>
-            <Link href={"./signUp"}>
+            <Link href={"signup"}>
               <p className="text-[#0166FF] font-normal text-base">Sign up</p>
             </Link>
           </div>

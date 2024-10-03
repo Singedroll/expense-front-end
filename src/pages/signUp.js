@@ -2,12 +2,15 @@ import Link from "next/link";
 import Logo from "../../public/icons/Logo";
 import { useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
+
+  const router = useRouter();
 
   const signUpClick = () => {
     const information = {
@@ -16,15 +19,23 @@ const SignUp = () => {
       password: password,
     };
     if (password !== rePassword) {
-      console.log("Davtsan password buruu baina");
+      console.log("Entered repassword doesn't match");
     } else {
     }
-    axios.post("http://localhost:8000/user", {
-      email: email,
-      name: name,
-      password: password,
-      avatar_img: "https://i.pravatar.cc/300",
-    });
+    axios
+      .post("http://localhost:5050/user", {
+        email: email,
+        name: name,
+        password: password,
+        avatar_img: "https://i.pravatar.cc/300",
+      })
+      .then(function (response) {
+        console.log(response);
+        router.push("/signin");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   const handleName = (event) => {
@@ -40,6 +51,7 @@ const SignUp = () => {
   const handleRePassword = (event) => {
     setRePassword(event.target.value);
   };
+
   return (
     <div className="flex w-screen h-screen">
       <div className="w-3/5 bg-[#FFFFFF] flex  justify-center items-center">
@@ -86,6 +98,7 @@ const SignUp = () => {
             <button
               onClick={() => signUpClick()}
               className="bg-[#0166FF] justify-center font-normal text-xl flex items-center text-white text-center py-2.5 w-full rounded-3xl"
+              type="submit"
             >
               Sign up
             </button>
@@ -94,7 +107,7 @@ const SignUp = () => {
             <p className="text-[#0F172A] font-normal text-base">
               Already have account?
             </p>
-            <Link href={"./signIn"}>
+            <Link href={"./signin"}>
               <p className="text-[#0166FF] font-normal text-base">Sign in</p>
             </Link>
           </div>
