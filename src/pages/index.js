@@ -118,8 +118,12 @@ const records = [
     },
   ],
 ];
-
+let userid = 0;
 const Home = () => {
+  if (typeof window !== "undefined") {
+    userid = localStorage.getItem("userid");
+  }
+  console.log(userid);
   const [showAdd, setShowAdd] = useState(false);
 
   const [selected, setSelected] = useState("All");
