@@ -265,7 +265,7 @@ const Home = () => {
             <div className="flex flex-col gap-3">
               <p className="font-semibold text-base"> Today </p>
               <div className="flex flex-col gap-3 mb-3">
-                {myRecords[0].map((recordToday, index) => {
+                {/* {myRecords[0].map((recordToday, index) => {
                   return (
                     <OneRecord
                       key={index}
@@ -277,11 +277,11 @@ const Home = () => {
                       iconColor={recordToday.iconColor}
                     />
                   );
-                })}
+                })} */}
               </div>
               <p className="font-semibold text-base"> Yesterday </p>
               <div className="flex flex-col gap-3">
-                {myRecords[1].map((recordToday, index) => {
+                {/* {myRecords[1].map((recordToday, index) => {
                   return (
                     <OneRecord
                       key={index}
@@ -293,7 +293,7 @@ const Home = () => {
                       iconColor={recordToday.iconColor}
                     />
                   );
-                })}
+                })} */}
               </div>
             </div>
           </div>

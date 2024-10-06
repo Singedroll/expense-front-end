@@ -1,96 +1,116 @@
-import { IoClose } from "react-icons/io5";
-import { useState, useEffect } from "react";
-import Drink from "../../public/icons/Drink";
-import Gift from "../../public/icons/Gift";
-import Shopping from "../../public/icons/Shopping";
-import Taxi from "../../public/icons/Taxi";
-import RentIcon from "../../public/icons/RentIcon";
-import FoodExpense from "../../public/icons/FoodExpenseIcon";
+import { useState } from "react";
+import useSWR from "swr";
+import axios from "axios";
 
-const AddRecord = (props) => {
-  const { onCloseModal } = props;
+// Fetcher function for useSWR
+const fetcher = (url) => axios.get(url).then((res) => res.data);
+
+const AddRecord = ({ onCloseModal }) => {
   const [incomeExpense, setIncomeExpense] = useState("Expense");
+  const [amount, setAmount] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
 
-  const handleIncomeOrExpense = (props) => {
-    const { name } = props;
-    setIncomeExpense(name);
-    if (incomeExpense === "Expense") {
-      setIncomeExpense("Income");
-    } else {
-      setIncomeExpense("Expense");
+  // Fetch categories using useSWR
+  const { data, error } = useSWR("http://localhost:5050/category", fetcher);
+
+  const handleIncomeOrExpense = () => {
+    setIncomeExpense(incomeExpense === "Expense" ? "Income" : "Expense");
+  };
+
+  const handleAdd = async () => {
+    const newTransaction = {
+      name: incomeExpense, // You might want to use a specific name
+      amount: parseFloat(amount), // Using state instead of DOM query
+      transaction_type: incomeExpense === "Expense" ? "EXP" : "INC", // Use ENUM values
+      description: description, // Using state instead of DOM query
+      user_id: 1, // Replace with actual user ID from context or state
+      category_id: category, //
+      currency_type: "MNT",
+    };
+
+    try {
+      await axios.post("http://localhost:5050/transaction", newTransaction);
+      alert("Transaction added successfully!");
+    } catch (error) {
+      console.error(
+        "Error details:",
+        error.response ? error.response.data : error.message
+      );
+      alert("Failed to add transaction");
     }
   };
 
-  const handleAdd = () => {};
+  if (error) return <div>Failed to load categories</div>;
+  if (!data) return <div>Loading categories...</div>;
 
-  const Expensebackground = incomeExpense === "Expense" ? "#0166FF" : "#F3F4F6";
-  const Incomebackground = incomeExpense === "Income" ? "#16A34A" : "#F3F4F6";
-  const buttonColor = incomeExpense === "Income" ? "#16A34A" : "#0166FF";
-  console.log(buttonColor);
-  const textColorIncome =
-    incomeExpense === "Income" ? "text-white" : "text-base";
-  const textColorExpense =
-    incomeExpense === "Expense" ? "text-white" : "text-base";
-
-  // const today = new Date();
-  // const day = String(today.getDate());
-  // const year = String(today.getFullYear());
-  // const month = "0" + String(today.getMonth());
-  // const hour = String(today.getHours());
-  // const minutes = String(today.getMinutes());
   return (
-    <div className="w-[792px] flex flex-col rounded-xl  border-b border-[#E2E8F0] bg-slate-200">
+    <div className="w-[792px] flex flex-col rounded-xl border-b border-[#E2E8F0] bg-slate-200">
       <div className="py-5 px-6 flex justify-between">
         <p className="font-semibold text-xl">Add Record</p>
-        <IoClose size={24} onClick={onCloseModal} />
+        <button onClick={onCloseModal}>Close</button>
       </div>
       <div className="flex w-full">
         <div className="px-6 pt-5 pb-6 flex flex-col gap-5">
           <div className="rounded-[100px] bg-[#F3F4F6] flex gap-1">
-            <div
-              onClick={() => handleIncomeOrExpense("Expense")}
-              className={`py-2 px-[55.5px] ${textColorExpense} font-normal text-base rounded-3xl bg-[${Expensebackground}]`}
-              style={{ backgroundColor: Expensebackground }}
+            <button
+              onClick={handleIncomeOrExpense}
+              className={`py-2 px-8 font-normal text-base rounded-3xl ${
+                incomeExpense === "Expense" ? "bg-blue-500 text-white" : ""
+              }`}
             >
               Expense
-            </div>
-            <div
-              onClick={() => handleIncomeOrExpense("Income")}
-              className={`py-2 px-[55.5px] ${textColorIncome} font-normal text-base rounded-3xl bg-[${Incomebackground}]`}
-              style={{ backgroundColor: Incomebackground }}
+            </button>
+            <button
+              onClick={handleIncomeOrExpense}
+              className={`py-2 px-8 font-normal text-base rounded-3xl ${
+                incomeExpense === "Income" ? "bg-green-500 text-white" : ""
+              }`}
             >
               Income
-            </div>
+            </button>
           </div>
           <div className="flex flex-col mb-3 gap-[22px]">
             <div className="flex flex-col py-3 px-4 bg-[#F3F4F6] border border-[#D1D5DB] rounded-xl">
-              <p className="font-normal text-base"> Amount </p>
+              <p className="font-normal text-base">Amount</p>
               <input
                 type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
                 placeholder="₮ 000.00"
                 className="font-normal text-xl bg-[#F3F4F6]"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <p> Category </p>
-              <select className="bg-[#F9FAFB] py-3 px-4 text-base font-normal border border-[#D1D5DB] rounded-lg">
-                <option defaultChecked> Find or choose category</option>
-                <option className="px-[18px] py-2 flex gap-3">Food</option>
-                <option> Home </option>
+              <p>Category</p>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="bg-[#F9FAFB] py-3 px-4 text-base font-normal border border-[#D1D5DB] rounded-lg"
+              >
+                <option value="">Find or choose category</option>
+                {data.message.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
           <button
-            onClick={() => handleAdd()}
-            className={`bg-[${buttonColor}] flex items-center justify-center py-2 rounded-3xl text-white`}
-            style={{ backgroundColor: buttonColor }}
+            onClick={handleAdd}
+            className={`py-2 rounded-3xl text-white ${
+              incomeExpense === "Income" ? "bg-green-500" : "bg-blue-500"
+            }`}
           >
             Add Record
           </button>
         </div>
-        <div className="flex flex-col gap-2 px-6 pb-6 pt-[18px] w-full ">
-          <p className="text-[#1F2937]">Description</p>
+        <div className="flex flex-col gap-2 px-6 pb-6 pt-[18px] w-full">
+          <p>Description</p>
           <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             placeholder="Write here"
             className="bg-[#F3F4F6] pt-4 pl-4 border border-[#D1D5DB] w-full h-full rounded-lg"
           />

@@ -1,25 +1,35 @@
 import { useEffect, useState } from "react";
-import useSWR from "swr";
+import axios from "axios";
 import MyCategories from "./Category";
 
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
-
 export const Categories = () => {
-  const [categories, setCategories] = useState();
-  const { data, error, isLoading } = useSWR(
-    `http://localhost:5050/category`,
-    fetcher
-  );
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  if (error) return <div>failed to load</div>;
-  if (isLoading) return <div>loading...</div>;
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("http://localhost:5050/category");
+        setCategories(response.data.message);
+      } catch (err) {
+        setError("Failed to load categories");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div>
       <h1>Categories</h1>
-      {data.message.map((category) => {
-        return <MyCategories key={category.id} categoryName={category.name} />;
-      })}
+      {categories.map((category) => (
+        <MyCategories key={category.id} categoryName={category.name} />
+      ))}
     </div>
   );
 };
