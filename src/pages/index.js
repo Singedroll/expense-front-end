@@ -133,6 +133,8 @@ const Home = () => {
   const [selectedEyes, setSelectedEyes] = useState();
 
   const [checkedCategories, setCheckedCategories] = useState(categories);
+  const [userTransaction, setUserTransaction] = useState([]);
+
   const handleCategory = (input, index) => {
     let myCategories = [...selectedEyes];
     if (input == "true") {
@@ -171,6 +173,23 @@ const Home = () => {
 
   const handleAdd = () => {
     setShowAdd(!showAdd);
+  };
+
+  const transactionToday = () => {
+    setUserTransaction(() => {
+      () => {
+        axios
+          .post("http://localhost:5050/transaction/transactionid", {
+            userid: userid,
+          })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      };
+    });
   };
   return (
     <div>
@@ -235,7 +254,7 @@ const Home = () => {
             <div className="flex flex-col gap-4">
               <div className="flex justify-between">
                 <p className="font-semibold text-base">Category</p>
-                <p className="font-normal text-base opacity-20"> Clear </p>
+                <p className="font-normal text-base text-neutral-400 ">Clear</p>
               </div>
               <div className="flex flex-col gap-2">
                 <Categories />
@@ -264,37 +283,9 @@ const Home = () => {
             </div>
             <div className="flex flex-col gap-3">
               <p className="font-semibold text-base"> Today </p>
-              <div className="flex flex-col gap-3 mb-3">
-                {/* {myRecords[0].map((recordToday, index) => {
-                  return (
-                    <OneRecord
-                      key={index}
-                      text={recordToday.text}
-                      image={recordToday.image}
-                      time={recordToday.time}
-                      color={recordToday.color}
-                      money={recordToday.money}
-                      iconColor={recordToday.iconColor}
-                    />
-                  );
-                })} */}
-              </div>
-              <p className="font-semibold text-base"> Yesterday </p>
-              <div className="flex flex-col gap-3">
-                {/* {myRecords[1].map((recordToday, index) => {
-                  return (
-                    <OneRecord
-                      key={index}
-                      text={recordToday.text}
-                      image={recordToday.image}
-                      time={recordToday.time}
-                      color={recordToday.color}
-                      money={recordToday.money}
-                      iconColor={recordToday.iconColor}
-                    />
-                  );
-                })} */}
-              </div>
+              <div className="flex flex-col gap-3 mb-3">{/*  */}</div>
+              <p className="font-semibold text-base"> History </p>
+              <div className="flex flex-col gap-3">{/*  */}</div>
             </div>
           </div>
         </div>
