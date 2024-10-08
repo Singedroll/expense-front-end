@@ -1,123 +1,16 @@
 import Navbar from "../components/Navbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MyCategories from "@/components/Category";
 import PlusSign from "../../public/icons/PlusSign";
-import OneRecord from "../components/OneRecord";
 import { FaChevronLeft, FaSearchengin } from "react-icons/fa6";
 import { FaAngleRight } from "react-icons/fa6";
 import RentIcon from "../../public/icons/RentIcon";
 import FoodExpense from "../../public/icons/FoodExpenseIcon";
 import AddRecord from "@/components/AddRecord";
 import { Categories } from "@/components/Categories";
+import axios from "axios";
+import Record from "../components/OneRecord";
 
-const categories = [
-  "Food & Drinks",
-  "Lending & Renting",
-  "Shopping",
-  "Housing",
-  "Transportation",
-  "Vehicle",
-  "Life & Entertainment",
-  "Communication, PC",
-  "Financial expenses",
-  "Investments",
-  "Income",
-  "Others",
-];
-const records = [
-  [
-    {
-      color: "#23E01F",
-      image: <RentIcon />,
-      time: "14:00",
-      text: "Lending & Renting",
-      money: "+ 1,000₮",
-      iconColor: "#0166FF",
-    },
-    {
-      color: "#F54949",
-      image: <FoodExpense />,
-      time: "14:00",
-      text: "Food & Drinks",
-      money: "- 1,000₮",
-      iconColor: "#FF4545",
-    },
-    {
-      color: "#F54949",
-      image: <FoodExpense />,
-      time: "14:00",
-      text: "Food & Drinks",
-      money: "- 1,000₮",
-      iconColor: "#FF4545",
-    },
-    {
-      color: "#23E01F",
-      image: <RentIcon />,
-      time: "14:00",
-      text: "Lending & Renting",
-      money: "+ 1,000₮",
-      iconColor: "#0166FF",
-    },
-    {
-      color: "#23E01F",
-      image: <RentIcon />,
-      time: "14:00",
-      text: "Lending & Renting",
-      money: "+ 1,000₮",
-      iconColor: "#0166FF",
-    },
-  ],
-  [
-    {
-      color: "#23E01F",
-      image: <RentIcon />,
-      time: "14:00",
-      text: "Lending & Renting",
-      money: "+ 1,000₮",
-      iconColor: "#0166FF",
-    },
-    {
-      color: "#F54949",
-      image: <FoodExpense />,
-      time: "14:00",
-      text: "Food & Drinks",
-      money: "- 1,000₮",
-      iconColor: "#FF4545",
-    },
-    {
-      color: "#F54949",
-      image: <FoodExpense />,
-      time: "14:00",
-      text: "Food & Drinks",
-      money: "- 1,000₮",
-      iconColor: "#FF4545",
-    },
-    {
-      color: "#23E01F",
-      image: <RentIcon />,
-      time: "14:00",
-      text: "Lending & Renting",
-      money: "+ 1,000₮",
-      iconColor: "#0166FF",
-    },
-    {
-      color: "#F54949",
-      image: <FoodExpense />,
-      time: "14:00",
-      text: "Food & Drinks",
-      money: "- 1,000₮",
-      iconColor: "#FF4545",
-    },
-    {
-      color: "#F54949",
-      image: <FoodExpense />,
-      time: "14:00",
-      text: "Food & Drinks",
-      money: "- 1,000₮",
-      iconColor: "#FF4545",
-    },
-  ],
-];
 let userid = 0;
 const Home = () => {
   if (typeof window !== "undefined") {
@@ -127,12 +20,9 @@ const Home = () => {
   const [showAdd, setShowAdd] = useState(false);
 
   const [selected, setSelected] = useState("All");
-  const [myRecords, setRecords] = useState(records);
 
-  const [selectedCategories, setSelectedCategories] = useState(categories);
   const [selectedEyes, setSelectedEyes] = useState();
 
-  const [checkedCategories, setCheckedCategories] = useState(categories);
   const [userTransaction, setUserTransaction] = useState([]);
 
   const handleCategory = (input, index) => {
@@ -174,23 +64,29 @@ const Home = () => {
   const handleAdd = () => {
     setShowAdd(!showAdd);
   };
+  useEffect(() => {
+    axios
+      .post("http://localhost:5050/transaction/transactionid", {
+        userid: userid,
+      })
+      .then(function (response) {
+        setUserTransaction(response.data.getUserTrans);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+  console.log(userTransaction);
 
-  const transactionToday = () => {
-    setUserTransaction(() => {
-      () => {
-        axios
-          .post("http://localhost:5050/transaction/transactionid", {
-            userid: userid,
-          })
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      };
-    });
-  };
+  const expTransactions = userTransaction.filter(
+    (transaction) => transaction.transaction_type === "EXP"
+  );
+
+  const incomeTransactions = userTransaction.filter(
+    (transaction) => transaction.transaction_type === "INC"
+  );
+  // console.log(expTransactions, incomeTransactions);
+
   return (
     <div>
       {showAdd && (
@@ -283,7 +179,22 @@ const Home = () => {
             </div>
             <div className="flex flex-col gap-3">
               <p className="font-semibold text-base"> Today </p>
-              <div className="flex flex-col gap-3 mb-3">{/*  */}</div>
+
+              <div className="flex flex-col gap-3 mb-3">
+                {userTransaction?.map((transaction, index) => {
+                  return (
+                    <Record
+                      key={index}
+                      categoryname={transaction?.name}
+                      transactiontype={transaction?.transaction_type}
+                      image={transaction.image}
+                      time={transaction.createdat}
+                      color={transaction.color}
+                      money={transaction.amount}
+                    />
+                  );
+                })}
+              </div>
               <p className="font-semibold text-base"> History </p>
               <div className="flex flex-col gap-3">{/*  */}</div>
             </div>

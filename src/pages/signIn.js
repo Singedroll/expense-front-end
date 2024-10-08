@@ -24,8 +24,8 @@ const SignIn = () => {
         password: password,
       })
       .then(function (response) {
-        router.push("/");
         localStorage.setItem("userid", response.data.myuser[0].id);
+        router.push("/");
       })
       .catch(function (error) {
         console.log(error);
