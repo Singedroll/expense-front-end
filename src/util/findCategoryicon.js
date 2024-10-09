@@ -2,59 +2,64 @@ import FoodExpense from "../../public/icons/FoodExpenseIcon";
 import Gift from "../../public/icons/Gift";
 import RentIcon from "../../public/icons/RentIcon";
 import Shopping from "../../public/icons/Shopping";
+import Taxi from "../../public/icons/Taxi";
 
 const icons = [
   {
     color: "#23E01F",
     image: <RentIcon />,
-    name: "Lending & Renting",
-    iconColor: "#0166FF",
+    name: "Housing",
   },
   {
     color: "#F54949",
     image: <RentIcon />,
-    name: "Lending & Renting",
-    iconColor: "#0166FF",
+    name: "Housing",
   },
   {
     color: "#23E01F",
     image: <FoodExpense />,
-    name: "Foods and Drinks",
-    iconColor: "#FF4545",
+    name: "Food & Drinks",
   },
   {
     color: "#F54949",
     image: <FoodExpense />,
-    name: "Foods and Drinks",
-    iconColor: "#FF4545",
+    name: "Food & Drinks",
   },
   {
     color: "#23E01F",
     image: <Shopping />,
     name: "Shopping",
-    iconColor: "#FF4545",
   },
   {
     color: "#F54949",
     image: <Shopping />,
     name: "Shopping",
-    iconColor: "#FF4545",
   },
   {
     color: "#23E01F",
     image: <Gift />,
     name: "Gift",
-    iconColor: "#FF4545",
   },
   {
     color: "#F54949",
     image: <Gift />,
     name: "Gift",
-    iconColor: "#FF4545",
+  },
+  {
+    color: "#23E01F",
+    image: <Taxi />,
+    name: "Transportation",
+  },
+  {
+    color: "#F54949",
+    image: <Taxi />,
+    name: "Transportation",
   },
 ];
 
-export const categoryIconByCategoryName = (props) => {
+const categoryIconByCategoryName = (props) => {
   const icon = icons.find((icon) => icon.name === props.categoryname);
+
   return icon;
 };
+export default categoryIconByCategoryName;

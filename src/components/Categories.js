@@ -23,7 +23,7 @@ export const Categories = () => {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
-
+  console.log(categories);
   return (
     <div>
       <h1>Categories</h1>

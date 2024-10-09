@@ -2,16 +2,14 @@ import { useState } from "react";
 import useSWR from "swr";
 import axios from "axios";
 
-// Fetcher function for useSWR
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
-const AddRecord = ({ onCloseModal }) => {
+const AddRecord = ({ onCloseModal, userid }) => {
   const [incomeExpense, setIncomeExpense] = useState("Expense");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState();
 
-  // Fetch categories using useSWR
   const { data, error } = useSWR("http://localhost:5050/category", fetcher);
 
   const handleIncomeOrExpense = () => {
@@ -20,27 +18,24 @@ const AddRecord = ({ onCloseModal }) => {
 
   const handleAdd = async () => {
     const newTransaction = {
-      name: incomeExpense, // You might want to use a specific name
-      amount: parseFloat(amount), // Using state instead of DOM query
-      transaction_type: incomeExpense === "Expense" ? "EXP" : "INC", // Use ENUM values
-      description: description, // Using state instead of DOM query
-      user_id: 1, // Replace with actual user ID from context or state
-      category_id: category, //
-      currency_type: "MNT",
+      name: incomeExpense,
+      amount: parseInt(amount),
+      transaction_type: incomeExpense === "Expense" ? "EXP" : "INC",
+      description: description,
+      user_id: userid,
+      category_id: category,
+      currency_type: "₮",
     };
 
     try {
       await axios.post("http://localhost:5050/transaction", newTransaction);
       alert("Transaction added successfully!");
     } catch (error) {
-      console.error(
-        "Error details:",
-        error.response ? error.response.data : error.message
-      );
+      console.log(error);
       alert("Failed to add transaction");
     }
   };
-
+  console.log(category);
   if (error) return <div>Failed to load categories</div>;
   if (!data) return <div>Loading categories...</div>;
 
@@ -89,7 +84,7 @@ const AddRecord = ({ onCloseModal }) => {
                 className="bg-[#F9FAFB] py-3 px-4 text-base font-normal border border-[#D1D5DB] rounded-lg"
               >
                 <option value="">Find or choose category</option>
-                {data.message.map((cat) => (
+                {data?.message.map((cat) => (
                   <option key={cat.id} value={cat.id}>
                     {cat.name}
                   </option>

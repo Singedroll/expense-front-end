@@ -16,7 +16,7 @@ const Home = () => {
   if (typeof window !== "undefined") {
     userid = localStorage.getItem("userid");
   }
-  console.log(userid);
+
   const [showAdd, setShowAdd] = useState(false);
 
   const [selected, setSelected] = useState("All");
@@ -24,6 +24,8 @@ const Home = () => {
   const [selectedEyes, setSelectedEyes] = useState();
 
   const [userTransaction, setUserTransaction] = useState([]);
+
+  const [records, setRecords] = useState({});
 
   const handleCategory = (input, index) => {
     let myCategories = [...selectedEyes];
@@ -42,16 +44,15 @@ const Home = () => {
     setCheckedCategories();
   };
   const handleExpense = () => {
-    const filtered = records.map((day) =>
-      day.filter((oneRecord) => oneRecord.money.includes("-"))
+    const filtered = userTransaction.map((day) =>
+      day.filter((Record) => Record.money.includes("-"))
     );
     setRecords(filtered);
   };
   const handleIncome = () => {
-    const filtered = records.map((day) =>
-      day.filter((oneRecord) => oneRecord.money.includes("+"))
+    const filtered = userTransaction.map((day) =>
+      day.filter((Record) => Record.money.includes("+"))
     );
-    console.log(filtered);
     setRecords(filtered);
   };
   const handleAll = () => {
@@ -78,20 +79,20 @@ const Home = () => {
   }, []);
   console.log(userTransaction);
 
-  const expTransactions = userTransaction.filter(
-    (transaction) => transaction.transaction_type === "EXP"
-  );
+  // const expTransactions = userTransaction.filter(
+  //   (transaction) => transaction.transaction_type === "EXP"
+  // );
 
-  const incomeTransactions = userTransaction.filter(
-    (transaction) => transaction.transaction_type === "INC"
-  );
+  // const incomeTransactions = userTransaction.filter(
+  //   (transaction) => transaction.transaction_type === "INC"
+  // );
   // console.log(expTransactions, incomeTransactions);
 
   return (
     <div>
       {showAdd && (
         <div className="z-30 fixed top-0 left-0 right-0 bottom-0 bg-gray-400 flex justify-center items-center">
-          <AddRecord onCloseModal={handleAdd} />
+          <AddRecord userid={userid} onCloseModal={handleAdd} />
         </div>
       )}
       <div className={`bg-[#F3F4F6] flex flex-col gap-8 items-center relative`}>
@@ -185,12 +186,12 @@ const Home = () => {
                   return (
                     <Record
                       key={index}
-                      categoryname={transaction?.name}
-                      transactiontype={transaction?.transaction_type}
-                      image={transaction.image}
+                      categoryname={transaction?.categoryName}
+                      transaction_type={transaction?.transaction_type}
                       time={transaction.createdat}
                       color={transaction.color}
                       money={transaction.amount}
+                      currencytype={transaction.currency_type}
                     />
                   );
                 })}
