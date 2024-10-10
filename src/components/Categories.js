@@ -12,7 +12,7 @@ export const Categories = () => {
       try {
         const response = await axios.get("http://localhost:5050/category");
         setCategories(response.data.message);
-      } catch (err) {
+      } catch (error) {
         setError("Failed to load categories");
       } finally {
         setLoading(false);
@@ -23,10 +23,8 @@ export const Categories = () => {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
-  console.log(categories);
   return (
     <div>
-      <h1>Categories</h1>
       {categories.map((category) => (
         <MyCategories key={category.id} categoryName={category.name} />
       ))}

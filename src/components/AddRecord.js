@@ -26,7 +26,7 @@ const AddRecord = ({ onCloseModal, userid }) => {
       category_id: category,
       currency_type: "₮",
     };
-
+    console.log(newTransaction);
     try {
       await axios.post("http://localhost:5050/transaction", newTransaction);
       alert("Transaction added successfully!");

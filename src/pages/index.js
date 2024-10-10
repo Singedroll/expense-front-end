@@ -10,6 +10,7 @@ import AddRecord from "@/components/AddRecord";
 import { Categories } from "@/components/Categories";
 import axios from "axios";
 import Record from "../components/OneRecord";
+import AddCategory from "@/components/AddCategory";
 
 let userid = 0;
 const Home = () => {
@@ -77,7 +78,6 @@ const Home = () => {
         console.log(error);
       });
   }, []);
-  console.log(userTransaction);
 
   // const expTransactions = userTransaction.filter(
   //   (transaction) => transaction.transaction_type === "EXP"
@@ -95,6 +95,11 @@ const Home = () => {
           <AddRecord userid={userid} onCloseModal={handleAdd} />
         </div>
       )}
+      {/* {showAddCat && (
+        <div className="z-30 fixed top-0 left-0 right-0 bottom-0 bg-gray-400 flex justify-center items-center">
+          <AddRecord onCloseModal={handleAddCat} />
+        </div>
+      )} */}
       <div className={`bg-[#F3F4F6] flex flex-col gap-8 items-center relative`}>
         <Navbar />
 
@@ -153,12 +158,11 @@ const Home = () => {
                 <p className="font-semibold text-base">Category</p>
                 <p className="font-normal text-base text-neutral-400 ">Clear</p>
               </div>
-              <div className="flex flex-col gap-2">
+              <div>
                 <Categories />
               </div>
-              <div className="flex gap-2 py-1.5 pl-3 items-center">
+              <div className="flex items-center pl-2">
                 <PlusSign color={"#0166FF"} />
-                <p>Add category </p>
               </div>
             </div>
           </div>
