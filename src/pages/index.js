@@ -19,18 +19,16 @@ const Home = () => {
   }
 
   const [showAdd, setShowAdd] = useState(false);
+  const [showAddCategory, setShowAddCategory] = useState(false);
 
   const [selected, setSelected] = useState("All");
-
   const [selectedEyes, setSelectedEyes] = useState();
-
   const [userTransaction, setUserTransaction] = useState([]);
-
   const [records, setRecords] = useState({});
 
   const handleCategory = (input, index) => {
     let myCategories = [...selectedEyes];
-    if (input == "true") {
+    if (input === "true") {
       myCategories[index] = "false";
     } else {
       myCategories[index] = "true";
@@ -38,27 +36,31 @@ const Home = () => {
     setSelectedEyes(myCategories);
     let filteredCategories = [];
     for (let i = 0; i < categories.length; i++) {
-      if (selectedEyes[i] == "true") {
+      if (selectedEyes[i] === "true") {
         filteredCategories.push(selectedCategories[i]);
       }
     }
     setCheckedCategories();
   };
+
   const handleExpense = () => {
     const filtered = userTransaction.map((day) =>
       day.filter((Record) => Record.money.includes("-"))
     );
     setRecords(filtered);
   };
+
   const handleIncome = () => {
     const filtered = userTransaction.map((day) =>
       day.filter((Record) => Record.money.includes("+"))
     );
     setRecords(filtered);
   };
+
   const handleAll = () => {
     setRecords(records);
   };
+
   const handleChange = (option) => {
     setSelected(option);
   };
@@ -66,6 +68,11 @@ const Home = () => {
   const handleAdd = () => {
     setShowAdd(!showAdd);
   };
+
+  const handleAddCategory = () => {
+    setShowAddCategory(!showAddCategory);
+  };
+
   useEffect(() => {
     axios
       .post("http://localhost:5050/transaction/transactionid", {
@@ -79,15 +86,6 @@ const Home = () => {
       });
   }, []);
 
-  // const expTransactions = userTransaction.filter(
-  //   (transaction) => transaction.transaction_type === "EXP"
-  // );
-
-  // const incomeTransactions = userTransaction.filter(
-  //   (transaction) => transaction.transaction_type === "INC"
-  // );
-  // console.log(expTransactions, incomeTransactions);
-
   return (
     <div>
       {showAdd && (
@@ -95,11 +93,13 @@ const Home = () => {
           <AddRecord userid={userid} onCloseModal={handleAdd} />
         </div>
       )}
-      {/* {showAddCat && (
+
+      {showAddCategory && (
         <div className="z-30 fixed top-0 left-0 right-0 bottom-0 bg-gray-400 flex justify-center items-center">
-          <AddRecord onCloseModal={handleAddCat} />
+          <AddCategory userid={userid} onCloseModal={handleAddCategory} />
         </div>
-      )} */}
+      )}
+
       <div className={`bg-[#F3F4F6] flex flex-col gap-8 items-center relative`}>
         <Navbar />
 
@@ -161,9 +161,13 @@ const Home = () => {
               <div>
                 <Categories />
               </div>
-              <div className="flex items-center pl-2">
+              <button
+                onClick={handleAddCategory}
+                className="flex items-center pl-2 gap-3"
+              >
                 <PlusSign color={"#0166FF"} />
-              </div>
+                <p>Add category</p>
+              </button>
             </div>
           </div>
           <div className="w-[894px] flex flex-col gap-4">
@@ -179,11 +183,11 @@ const Home = () => {
               </div>
               <select className="w-[180px] py-3 px-4 rounded-lg font-semibold text-base text-[#1F2937] border border-[#D1D5DB]">
                 <option selected>Newest First</option>
-                <option> Latest First </option>
+                <option>Latest First</option>
               </select>
             </div>
             <div className="flex flex-col gap-3">
-              <p className="font-semibold text-base"> Today </p>
+              <p className="font-semibold text-base">Today</p>
 
               <div className="flex flex-col gap-3 mb-3">
                 {userTransaction?.map((transaction, index) => {
@@ -200,7 +204,7 @@ const Home = () => {
                   );
                 })}
               </div>
-              <p className="font-semibold text-base"> History </p>
+              <p className="font-semibold text-base">History</p>
               <div className="flex flex-col gap-3">{/*  */}</div>
             </div>
           </div>
