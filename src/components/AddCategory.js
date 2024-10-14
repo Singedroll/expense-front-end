@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import axios from "axios";
 const AddCategory = ({ onCloseModal }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");

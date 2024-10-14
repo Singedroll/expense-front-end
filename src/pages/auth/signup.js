@@ -1,37 +1,46 @@
-import Logo from "../../public/icons/Logo";
 import Link from "next/link";
+import Logo from "../../../public/icons/Logo";
+import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useState } from "react";
 
-const SignIn = () => {
+const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rePassword, setRePassword] = useState("");
+
   const router = useRouter();
+
   const signUpClick = () => {
     const information = {
+      name: name,
       email: email,
       password: password,
     };
-    if (password !== password) {
-      console.log("Entered email or password doesn't match");
+    if (password !== rePassword) {
+      console.log("Entered repassword doesn't match");
     } else {
     }
     axios
-      .post("http://localhost:5050/user/signin", {
+      .post("http://localhost:5050/user", {
         email: email,
+        name: name,
         password: password,
+        avatar_img: "https://i.pravatar.cc/300",
       })
       .then(function (response) {
-        localStorage.setItem("userid", response.data.myuser[0].id);
-        router.push("/");
+        console.log(response);
+        router.push("/auth/signin");
       })
       .catch(function (error) {
         console.log(error);
       });
   };
 
+  const handleName = (event) => {
+    setName(event.target.value);
+  };
   const handleEmail = (event) => {
     setEmail(event.target.value);
   };
@@ -39,9 +48,10 @@ const SignIn = () => {
     setPassword(event.target.value);
   };
 
-  const createId = () => {
-    localStorage.setItem();
+  const handleRePassword = (event) => {
+    setRePassword(event.target.value);
   };
+
   return (
     <div className="flex w-screen h-screen">
       <div className="w-3/5 bg-[#FFFFFF] flex  justify-center items-center">
@@ -52,36 +62,53 @@ const SignIn = () => {
           </div>
           <div className="flex flex-col gap-2 items-center">
             <p className="text-[#0F172A] font-semibold text-2xl">
-              Welcome Back
+              Create Geld account
             </p>
             <p className="text-[#334155] font-normal text-base">
-              Welcome back, Please enter your details
+              Sign up below to create your Wallet account
             </p>
           </div>
           <div className="flex flex-col gap-4 w-full">
             <input
+              onChange={handleName}
+              value={name}
+              className="px-4 py-3 w-full rounded-lg bg-[#F3F4F6] border border-[#D1D5DB]"
+              placeholder="Name"
+            />
+            <input
               onChange={handleEmail}
+              value={email}
               className="px-4 py-3 w-full rounded-lg bg-[#F3F4F6] border border-[#D1D5DB]"
               placeholder="Email"
             />
             <input
+              value={password}
               onChange={handlePassword}
+              type="password"
               className="px-4 py-3 w-full rounded-lg bg-[#F3F4F6] border border-[#D1D5DB]"
               placeholder="Password"
+            />
+            <input
+              value={rePassword}
+              onChange={handleRePassword}
+              type="password"
+              className="px-4 py-3 w-full rounded-lg bg-[#F3F4F6] border border-[#D1D5DB]"
+              placeholder="Re-password"
             />
             <button
               onClick={() => signUpClick()}
               className="bg-[#0166FF] justify-center font-normal text-xl flex items-center text-white text-center py-2.5 w-full rounded-3xl"
+              type="submit"
             >
-              Log in
+              Sign up
             </button>
           </div>
           <div className="flex items-center justify-center gap-3">
             <p className="text-[#0F172A] font-normal text-base">
-              Do not have account?
+              Already have an account?
             </p>
-            <Link href={"signup"}>
-              <p className="text-[#0166FF] font-normal text-base">Sign up</p>
+            <Link href={"./signin"}>
+              <p className="text-[#0166FF] font-normal text-base">Sign in</p>
             </Link>
           </div>
         </div>
@@ -91,4 +118,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;

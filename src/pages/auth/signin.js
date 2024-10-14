@@ -1,55 +1,42 @@
+import Logo from "../../../public/icons/Logo";
 import Link from "next/link";
-import Logo from "../../public/icons/Logo";
-import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
-const SignUp = () => {
+const SignIn = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rePassword, setRePassword] = useState("");
-
   const router = useRouter();
-
   const signUpClick = () => {
     const information = {
-      name: name,
       email: email,
       password: password,
     };
-    if (password !== rePassword) {
-      console.log("Entered repassword doesn't match");
+    if (password !== password) {
+      console.log("Entered email or password doesn't match");
     } else {
     }
     axios
-      .post("http://localhost:5050/user", {
+      .post("http://localhost:5050/user/signin", {
         email: email,
-        name: name,
         password: password,
-        avatar_img: "https://i.pravatar.cc/300",
       })
       .then(function (response) {
-        console.log(response);
-        router.push("/signin");
+        localStorage.setItem("userid", response.data.myuser[0].id);
+        router.push("/");
       })
       .catch(function (error) {
         console.log(error);
       });
   };
 
-  const handleName = (event) => {
-    setName(event.target.value);
-  };
   const handleEmail = (event) => {
     setEmail(event.target.value);
   };
   const handlePassword = (event) => {
     setPassword(event.target.value);
-  };
-
-  const handleRePassword = (event) => {
-    setRePassword(event.target.value);
   };
 
   return (
@@ -62,53 +49,36 @@ const SignUp = () => {
           </div>
           <div className="flex flex-col gap-2 items-center">
             <p className="text-[#0F172A] font-semibold text-2xl">
-              Create Geld account
+              Welcome Back
             </p>
             <p className="text-[#334155] font-normal text-base">
-              Sign up below to create your Wallet account
+              Welcome back, Please enter your details
             </p>
           </div>
           <div className="flex flex-col gap-4 w-full">
             <input
-              onChange={handleName}
-              value={name}
-              className="px-4 py-3 w-full rounded-lg bg-[#F3F4F6] border border-[#D1D5DB]"
-              placeholder="Name"
-            />
-            <input
               onChange={handleEmail}
-              value={email}
               className="px-4 py-3 w-full rounded-lg bg-[#F3F4F6] border border-[#D1D5DB]"
               placeholder="Email"
             />
             <input
-              value={password}
               onChange={handlePassword}
-              type="password"
               className="px-4 py-3 w-full rounded-lg bg-[#F3F4F6] border border-[#D1D5DB]"
               placeholder="Password"
-            />
-            <input
-              value={rePassword}
-              onChange={handleRePassword}
-              type="password"
-              className="px-4 py-3 w-full rounded-lg bg-[#F3F4F6] border border-[#D1D5DB]"
-              placeholder="Re-password"
             />
             <button
               onClick={() => signUpClick()}
               className="bg-[#0166FF] justify-center font-normal text-xl flex items-center text-white text-center py-2.5 w-full rounded-3xl"
-              type="submit"
             >
-              Sign up
+              Log in
             </button>
           </div>
           <div className="flex items-center justify-center gap-3">
             <p className="text-[#0F172A] font-normal text-base">
-              Already have account?
+              Do not have an account?
             </p>
-            <Link href={"./signin"}>
-              <p className="text-[#0166FF] font-normal text-base">Sign in</p>
+            <Link href={"signup"}>
+              <p className="text-[#0166FF] font-normal text-base">Sign up </p>
             </Link>
           </div>
         </div>
@@ -118,4 +88,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignIn;
