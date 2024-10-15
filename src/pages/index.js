@@ -85,7 +85,7 @@ const Home = () => {
         console.log(error);
       });
   }, []);
-
+  console.log("");
   return (
     <div>
       {showAdd && (
