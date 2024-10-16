@@ -10,7 +10,10 @@ const AddRecord = ({ onCloseModal, userid }) => {
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState();
 
-  const { data, error } = useSWR("http://localhost:5050/category", fetcher);
+  const { data, error } = useSWR(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/category`,
+    fetcher
+  );
 
   const handleIncomeOrExpense = () => {
     setIncomeExpense(incomeExpense === "Expense" ? "Income" : "Expense");
@@ -26,9 +29,11 @@ const AddRecord = ({ onCloseModal, userid }) => {
       category_id: category,
       currency_type: "₮",
     };
-    console.log(newTransaction);
     try {
-      await axios.post("http://localhost:5050/transaction", newTransaction);
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/transaction`,
+        newTransaction
+      );
       alert("Transaction added successfully!");
     } catch (error) {
       console.log(error);

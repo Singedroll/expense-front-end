@@ -3,33 +3,21 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { useAuthContext } from "@/providers";
 
-const SignIn = () => {
+const SignInPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const signUpClick = () => {
-    const information = {
-      email: email,
-      password: password,
-    };
-    if (password !== password) {
-      console.log("Entered email or password doesn't match");
-    } else {
-    }
-    axios
-      .post("http://localhost:5050/user/signin", {
-        email: email,
-        password: password,
-      })
-      .then(function (response) {
-        localStorage.setItem("userid", response.data.myuser[0].id);
-        router.push("/");
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+  const { signin, isLoading } = useAuthContext();
+
+  const handleSignIn = async () => {
+    // if (password !== password) {
+    //   console.log("Entered email or password doesn't match");
+    //   return;
+    // }
+    await signin(email, password);
   };
 
   const handleEmail = (event) => {
@@ -67,10 +55,18 @@ const SignIn = () => {
               placeholder="Password"
             />
             <button
-              onClick={() => signUpClick()}
+              onClick={handleSignIn}
               className="bg-[#0166FF] justify-center font-normal text-xl flex items-center text-white text-center py-2.5 w-full rounded-3xl"
+              disabled={isLoading}
             >
-              Log in
+              {isLoading ? (
+                <>
+                  <span className="loading loading-spinner mr-2"></span>
+                  loading
+                </>
+              ) : (
+                "Sign in"
+              )}
             </button>
           </div>
           <div className="flex items-center justify-center gap-3">
@@ -88,4 +84,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignInPage;

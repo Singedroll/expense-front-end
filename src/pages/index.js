@@ -11,20 +11,34 @@ import { Categories } from "@/components/Categories";
 import axios from "axios";
 import Record from "../components/OneRecord";
 import AddCategory from "@/components/AddCategory";
+import { useAuthContext } from "@/providers";
+import { useRouter } from "next/router";
 
 let userid = 0;
 const Home = () => {
-  if (typeof window !== "undefined") {
-    userid = localStorage.getItem("userid");
-  }
-
+  const { isLoading, currentUser } = useAuthContext();
   const [showAdd, setShowAdd] = useState(false);
   const [showAddCategory, setShowAddCategory] = useState(false);
 
   const [selected, setSelected] = useState("All");
   const [selectedEyes, setSelectedEyes] = useState();
   const [userTransaction, setUserTransaction] = useState([]);
-  const [records, setRecords] = useState({});
+  const [records, setRecords] = useState([]);
+
+  useEffect(() => {
+    axios
+      .post(`http://localhost:5050/transaction/transactionid`, {
+        userid: currentUser?.userId,
+      })
+      .then(function (response) {
+        console.log(response);
+        setUserTransaction(response.data.getUserTrans);
+        setRecords(response.data.getUserTrans);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [currentUser]);
 
   const handleCategory = (input, index) => {
     let myCategories = [...selectedEyes];
@@ -44,21 +58,21 @@ const Home = () => {
   };
 
   const handleExpense = () => {
-    const filtered = userTransaction.map((day) =>
-      day.filter((Record) => Record.money.includes("-"))
+    const filtered = userTransaction.filter((Record) =>
+      Record.transaction_type.includes("EXP")
     );
     setRecords(filtered);
   };
 
   const handleIncome = () => {
-    const filtered = userTransaction.map((day) =>
-      day.filter((Record) => Record.money.includes("+"))
+    const filtered = userTransaction.filter((Record) =>
+      Record.transaction_type.includes("INC")
     );
     setRecords(filtered);
   };
 
   const handleAll = () => {
-    setRecords(records);
+    setRecords(userTransaction);
   };
 
   const handleChange = (option) => {
@@ -73,19 +87,10 @@ const Home = () => {
     setShowAddCategory(!showAddCategory);
   };
 
-  useEffect(() => {
-    axios
-      .post("http://localhost:5050/transaction/transactionid", {
-        userid: userid,
-      })
-      .then(function (response) {
-        setUserTransaction(response.data.getUserTrans);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, []);
-  console.log("");
+  if (isLoading) {
+    return <p>...loading</p>;
+  }
+
   return (
     <div>
       {showAdd && (
@@ -183,14 +188,14 @@ const Home = () => {
               </div>
               <select className="w-[180px] py-3 px-4 rounded-lg font-semibold text-base text-[#1F2937] border border-[#D1D5DB]">
                 <option selected>Newest First</option>
-                <option>Latest First</option>
+                <option value="">Latest First</option>
               </select>
             </div>
             <div className="flex flex-col gap-3">
               <p className="font-semibold text-base">Today</p>
 
               <div className="flex flex-col gap-3 mb-3">
-                {userTransaction?.map((transaction, index) => {
+                {records?.map((transaction, index) => {
                   return (
                     <Record
                       key={index}

@@ -5,6 +5,7 @@ import { useState } from "react";
 const MyCategories = (props) => {
   const { categoryName, ischecked } = props;
   const [checked, setChecked] = useState("true");
+
   const handleClick = () => {
     if (checked === "true") {
       setChecked("false");

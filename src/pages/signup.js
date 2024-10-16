@@ -23,7 +23,7 @@ const SignUp = () => {
     } else {
     }
     axios
-      .post("http://localhost:5050/user", {
+      .post(`${NEXT_PUBLIC_BACKEND_URL}/user`, {
         email: email,
         name: name,
         password: password,

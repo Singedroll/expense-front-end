@@ -1,7 +1,6 @@
 import "@/styles/globals.css";
 import Navbar from "@/components/Navbar";
-import { useContext } from "react";
-import { AuthProvider } from "@/providers/AuthProvider";
+import { AuthProvider } from "@/providers";
 
 export default function App({ Component, pageProps }) {
   return (

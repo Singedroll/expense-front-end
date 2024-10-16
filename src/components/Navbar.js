@@ -6,12 +6,22 @@ import PlusSign from "../../public/icons/PlusSign";
 import { FaAngleRight } from "react-icons/fa6";
 import RentIcon from "../../public/icons/RentIcon";
 import FoodExpense from "../../public/icons/FoodExpenseIcon";
+import { useAuthContext } from "@/providers";
 
 const Navbar = (props) => {
   const [showAdd, setShowAdd] = useState(false);
+  const { isLoading, currentUser } = useAuthContext();
   const { onClick } = props;
   const handleAdd = () => {
     setShowAdd(!showAdd);
+  };
+
+  const renderCurrentUserAvatar = () => {
+    if (isLoading) {
+      return <span className="loading loading-spinner loading-xs"></span>;
+    }
+
+    return <img src={currentUser?.avatar} />;
   };
   return (
     <div className="bg-white w-full px-[120px] py-4 flex justify-between max-w-screen-xl">
@@ -35,7 +45,9 @@ const Navbar = (props) => {
           + Record
         </button>
 
-        <div className="rounded-full w-10 h-10 bg-[url('/images/Profile.jpeg')]"></div>
+        <div className="avatar">
+          <div className="w-10 rounded-full">{renderCurrentUserAvatar()}</div>
+        </div>
       </div>
     </div>
   );

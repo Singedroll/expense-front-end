@@ -13,7 +13,10 @@ const AddCategory = ({ onCloseModal }) => {
     };
     console.log(newCategory);
     try {
-      await axios.post("http://localhost:5050/category", newCategory);
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/category`,
+        newCategory
+      );
       alert("Category added successfully!");
       onCloseModal();
     } catch (error) {

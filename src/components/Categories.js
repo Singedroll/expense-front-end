@@ -10,7 +10,9 @@ export const Categories = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:5050/category");
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/category`
+        );
         setCategories(response.data.message);
       } catch (error) {
         setError("Failed to load categories");
