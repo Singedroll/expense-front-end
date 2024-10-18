@@ -20,7 +20,6 @@ export const AuthProvider = ({ children }) => {
     if (user) {
       const parsedUser = JSON.parse(user);
       setCurrentUser(parsedUser);
-      console.log(parsedUser);
     }
 
     setIsLoading(false);
@@ -34,7 +33,7 @@ export const AuthProvider = ({ children }) => {
 
   const signin = async (email, password) => {
     setIsLoading(true);
-
+    console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
     try {
       const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/signin`,
@@ -47,16 +46,16 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem(
         "user",
         JSON.stringify({
-          email: data?.myuser?.[0]?.email,
-          userId: data?.myuser?.[0]?.id,
-          avatar: data?.myuser?.[0]?.avatar_img,
+          email: data?.myuser?.email,
+          userId: data?.myuser?.id,
+          avatar: data?.myuser?.avatar_img,
         })
       );
 
       setCurrentUser({
-        email: data?.myuser?.[0]?.email,
-        userId: data?.myuser?.[0]?.id,
-        avatar: data?.myuser?.[0]?.avatar_img,
+        email: data?.myuser?.email,
+        userId: data?.myuser?.id,
+        avatar: data?.myuser?.avatar_img,
       });
       router.push("/");
     } catch (error) {

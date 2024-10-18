@@ -23,7 +23,7 @@ const SignUp = () => {
     } else {
     }
     axios
-      .post(`${NEXT_PUBLIC_BACKEND_URL}/user`, {
+      .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/user`, {
         email: email,
         name: name,
         password: password,
@@ -31,7 +31,7 @@ const SignUp = () => {
       })
       .then(function (response) {
         console.log(response);
-        router.push("/auth/signin");
+        router.push("/signin");
       })
       .catch(function (error) {
         console.log(error);

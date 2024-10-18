@@ -11,7 +11,6 @@ const AddCategory = ({ onCloseModal }) => {
       description: description,
       category_image: categoryImage,
     };
-    console.log(newCategory);
     try {
       await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/category`,

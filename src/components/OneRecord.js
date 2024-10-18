@@ -1,6 +1,7 @@
 import categoryIconByCategoryName from "@/util/findCategoryicon";
 import { format, formatDistance, formatRelative, subDays } from "date-fns";
 import { ClientPageRoot } from "next/dist/client/components/client-page";
+
 const Record = (props) => {
   const { time, money, categoryname, transaction_type, currencytype } = props;
   const iconColor = transaction_type === "EXP" ? "#FF4545" : "#0166FF";
@@ -23,8 +24,9 @@ const Record = (props) => {
 
         <div className="flex flex-col">
           <p className="font-normal text-base">{categoryname}</p>
+          {/* Change format here to display date as yyyy-mm-dd */}
           <p className="font-normal text-xs text-[#6B7280]">
-            {format(new Date(time), "HH:mm")}
+            {format(new Date(time), "yyyy-MM-dd")}
           </p>
         </div>
       </div>

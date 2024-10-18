@@ -9,14 +9,14 @@ const SignInPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
   const { signin, isLoading } = useAuthContext();
+  const router = useRouter();
 
   const handleSignIn = async () => {
-    // if (password !== password) {
-    //   console.log("Entered email or password doesn't match");
-    //   return;
-    // }
+    if (password !== password) {
+      console.log("Entered email or password doesn't match");
+      return;
+    }
     await signin(email, password);
   };
 

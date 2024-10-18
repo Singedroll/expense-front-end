@@ -26,14 +26,19 @@ const Home = () => {
   const [records, setRecords] = useState([]);
 
   useEffect(() => {
+    userid = currentUser?.userId;
     axios
-      .post(`http://localhost:5050/transaction/transactionid`, {
-        userid: currentUser?.userId,
-      })
+      .post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/transaction/transactionid`,
+        {
+          userid: currentUser?.userId,
+        }
+      )
       .then(function (response) {
         console.log(response);
         setUserTransaction(response.data.getUserTrans);
         setRecords(response.data.getUserTrans);
+        console.log(response.data.getUserTrans);
       })
       .catch(function (error) {
         console.log(error);
@@ -90,6 +95,7 @@ const Home = () => {
   if (isLoading) {
     return <p>...loading</p>;
   }
+  console.log(records);
 
   return (
     <div>
@@ -201,7 +207,7 @@ const Home = () => {
                       key={index}
                       categoryname={transaction?.categoryName}
                       transaction_type={transaction?.transaction_type}
-                      time={transaction.createdat}
+                      time={transaction.categoryDate}
                       color={transaction.color}
                       money={transaction.amount}
                       currencytype={transaction.currency_type}
