@@ -24,7 +24,6 @@ const Record = (props) => {
 
         <div className="flex flex-col">
           <p className="font-normal text-base">{categoryname}</p>
-          {/* Change format here to display date as yyyy-mm-dd */}
           <p className="font-normal text-xs text-[#6B7280]">
             {format(new Date(time), "yyyy-MM-dd")}
           </p>

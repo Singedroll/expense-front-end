@@ -9,6 +9,7 @@ import WhiteLogo from "../../public/icons/WhiteLogo";
 import currency from "currency.js";
 import { useThemecontext } from "@/providers/Themecontext";
 import Record from "@/components/OneRecord";
+import UnionLogo from "../../public/icons/UnionLogo";
 
 const Dashboard = () => {
   const [income, setIncome] = useState(0);

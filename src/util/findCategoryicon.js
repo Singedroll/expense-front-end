@@ -1,3 +1,4 @@
+import CommunicationPc from "../../public/icons/CommunicationPC";
 import FoodExpense from "../../public/icons/FoodExpenseIcon";
 import Gift from "../../public/icons/Gift";
 import RentIcon from "../../public/icons/RentIcon";
@@ -54,6 +55,16 @@ const icons = [
     color: "#F54949",
     image: <Taxi />,
     name: "Transportation",
+  },
+  {
+    color: "#23E01F",
+    image: <CommunicationPc />,
+    name: "Communication, PC",
+  },
+  {
+    color: "#F54949",
+    image: <CommunicationPc />,
+    name: "Communication, PC",
   },
 ];
 
