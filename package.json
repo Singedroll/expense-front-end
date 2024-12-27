@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@shadcn/ui": "^0.0.4",
     "axios": "^1.7.7",
     "chart.js": "^4.4.5",
     "currency.js": "^2.0.4",

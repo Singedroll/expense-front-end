@@ -5,6 +5,8 @@ import axios from "axios";
 const AuthContext = createContext({
   currentUser: null,
   isLoading: false,
+  signin: () => {},
+  signOut: () => {},
 });
 
 export const useAuthContext = () => useContext(AuthContext);
@@ -33,7 +35,6 @@ export const AuthProvider = ({ children }) => {
 
   const signin = async (email, password) => {
     setIsLoading(true);
-    console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
     try {
       const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/signin`,
@@ -65,12 +66,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const signOut = () => {
+    localStorage.removeItem("user");
+    setCurrentUser(null);
+    router.push("/signin");
+  };
+
   return (
     <AuthContext.Provider
       value={{
         currentUser,
         isLoading,
         signin,
+        signOut,
       }}
     >
       {children}
