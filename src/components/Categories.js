@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import MyCategories from "./Category";
 
-export const Categories = () => {
+export const Categories = ({ onCategoryVisibilityChange }) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,12 +23,22 @@ export const Categories = () => {
     fetchCategories();
   }, []);
 
+  const handleVisibilityChange = (categoryName, isVisible) => {
+    onCategoryVisibilityChange?.(categoryName, isVisible);
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   return (
     <div>
       {categories.map((category) => (
-        <MyCategories key={category.id} categoryName={category.name} />
+        <MyCategories
+          key={category.id}
+          categoryName={category.name}
+          onVisibilityChange={(isVisible) =>
+            handleVisibilityChange(category.name, isVisible)
+          }
+        />
       ))}
     </div>
   );

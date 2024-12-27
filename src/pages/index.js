@@ -1,29 +1,24 @@
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
-import MyCategories from "@/components/Category";
 import PlusSign from "../../public/icons/PlusSign";
 import { FaChevronLeft, FaSearchengin } from "react-icons/fa6";
 import { FaAngleRight } from "react-icons/fa6";
-import RentIcon from "../../public/icons/RentIcon";
-import FoodExpense from "../../public/icons/FoodExpenseIcon";
 import AddRecord from "@/components/AddRecord";
 import { Categories } from "@/components/Categories";
 import axios from "axios";
 import Record from "../components/OneRecord";
 import AddCategory from "@/components/AddCategory";
 import { useAuthContext } from "@/providers";
-import { useRouter } from "next/router";
 
 let userid = 0;
 const Home = () => {
   const { isLoading, currentUser } = useAuthContext();
   const [showAdd, setShowAdd] = useState(false);
   const [showAddCategory, setShowAddCategory] = useState(false);
-
   const [selected, setSelected] = useState("All");
-  const [selectedEyes, setSelectedEyes] = useState();
   const [userTransaction, setUserTransaction] = useState([]);
   const [records, setRecords] = useState([]);
+  const [visibleCategories, setVisibleCategories] = useState(new Set());
 
   useEffect(() => {
     userid = currentUser?.userId;
@@ -35,53 +30,88 @@ const Home = () => {
         }
       )
       .then(function (response) {
-        console.log(response);
         setUserTransaction(response.data.getUserTrans);
         setRecords(response.data.getUserTrans);
-        console.log(response.data.getUserTrans);
       })
       .catch(function (error) {
         console.log(error);
       });
   }, [currentUser]);
 
-  const handleCategory = (input, index) => {
-    let myCategories = [...selectedEyes];
-    if (input === "true") {
-      myCategories[index] = "false";
+  const handleCategoryVisibility = (categoryName, isVisible) => {
+    let filteredRecords;
+
+    if (selected === "Income") {
+      filteredRecords = userTransaction.filter((record) =>
+        record.transaction_type.includes("INC")
+      );
+    } else if (selected === "Expense") {
+      filteredRecords = userTransaction.filter((record) =>
+        record.transaction_type.includes("EXP")
+      );
     } else {
-      myCategories[index] = "true";
+      filteredRecords = [...userTransaction];
     }
-    setSelectedEyes(myCategories);
-    let filteredCategories = [];
-    for (let i = 0; i < categories.length; i++) {
-      if (selectedEyes[i] === "true") {
-        filteredCategories.push(selectedCategories[i]);
-      }
+
+    const newVisibleCategories = new Set(visibleCategories);
+    if (isVisible) {
+      newVisibleCategories.add(categoryName);
+    } else {
+      newVisibleCategories.delete(categoryName);
     }
-    setCheckedCategories();
+    setVisibleCategories(newVisibleCategories);
+
+    if (newVisibleCategories.size === 0) {
+      setRecords(filteredRecords);
+      return;
+    }
+
+    setRecords(
+      filteredRecords.filter((transaction) =>
+        newVisibleCategories.has(transaction.categoryName)
+      )
+    );
   };
 
   const handleExpense = () => {
     const filtered = userTransaction.filter((Record) =>
       Record.transaction_type.includes("EXP")
     );
-    setRecords(filtered);
+    if (visibleCategories.size > 0) {
+      setRecords(
+        filtered.filter((record) => visibleCategories.has(record.categoryName))
+      );
+    } else {
+      setRecords(filtered);
+    }
+    setSelected("Expense");
   };
 
   const handleIncome = () => {
     const filtered = userTransaction.filter((Record) =>
       Record.transaction_type.includes("INC")
     );
-    setRecords(filtered);
+    if (visibleCategories.size > 0) {
+      setRecords(
+        filtered.filter((record) => visibleCategories.has(record.categoryName))
+      );
+    } else {
+      setRecords(filtered);
+    }
+    setSelected("Income");
   };
 
   const handleAll = () => {
-    setRecords(userTransaction);
-  };
-
-  const handleChange = (option) => {
-    setSelected(option);
+    if (visibleCategories.size > 0) {
+      setRecords(
+        userTransaction.filter((record) =>
+          visibleCategories.has(record.categoryName)
+        )
+      );
+    } else {
+      setRecords(userTransaction);
+    }
+    setSelected("All");
   };
 
   const handleAdd = () => {
@@ -95,7 +125,6 @@ const Home = () => {
   if (isLoading) {
     return <p>...loading</p>;
   }
-  console.log(records);
 
   return (
     <div>
@@ -130,7 +159,7 @@ const Home = () => {
               className="border border-[#D1D5DB] rounded-lg px-4 py-1"
             />
             <div className="flex flex-col gap-1">
-              <p className="font-semibold text-base text-[#1F2937] mb-3">
+              <p className="font-semibold text-base text-[#D1D5DB] mb-3">
                 Types
               </p>
               <div className="flex items-center gap-2 px-3 py-1.5">
@@ -138,8 +167,7 @@ const Home = () => {
                   type="checkbox"
                   checked={"All" === selected}
                   className="checkbox"
-                  onChange={() => handleChange("All")}
-                  onClick={() => handleAll()}
+                  onChange={() => handleAll()}
                 />
                 All
               </div>
@@ -148,8 +176,7 @@ const Home = () => {
                   type="checkbox"
                   checked={"Income" === selected}
                   className="checkbox"
-                  onChange={() => handleChange("Income")}
-                  onClick={() => handleIncome()}
+                  onChange={() => handleIncome()}
                 />
                 Income
               </div>
@@ -158,8 +185,7 @@ const Home = () => {
                   type="checkbox"
                   checked={"Expense" === selected}
                   className="checkbox"
-                  onChange={() => handleChange("Expense")}
-                  onClick={() => handleExpense()}
+                  onChange={() => handleExpense()}
                 />
                 Expense
               </div>
@@ -170,7 +196,9 @@ const Home = () => {
                 <p className="font-normal text-base text-neutral-400 ">Clear</p>
               </div>
               <div>
-                <Categories />
+                <Categories
+                  onCategoryVisibilityChange={handleCategoryVisibility}
+                />
               </div>
               <button
                 onClick={handleAddCategory}
@@ -216,7 +244,7 @@ const Home = () => {
                 })}
               </div>
               <p className="font-semibold text-base">History</p>
-              <div className="flex flex-col gap-3">{/*  */}</div>
+              <div className="flex flex-col gap-3"></div>
             </div>
           </div>
         </div>

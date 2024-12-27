@@ -3,16 +3,15 @@ import ClosedEyeIcon from "../../public/icons/ClosedEyeIcon";
 import { useState } from "react";
 
 const MyCategories = (props) => {
-  const { categoryName, ischecked } = props;
+  const { categoryName, onVisibilityChange } = props;
   const [checked, setChecked] = useState("true");
 
   const handleClick = () => {
-    if (checked === "true") {
-      setChecked("false");
-    } else {
-      setChecked("true");
-    }
+    const newChecked = checked === "true" ? "false" : "true";
+    setChecked(newChecked);
+    onVisibilityChange?.(newChecked === "true");
   };
+
   const icon = checked === "true" ? <EyeIcon /> : <ClosedEyeIcon />;
   return (
     <div
